@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Mon May 30 14:25:41 CST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0155-0056-e0c9-0000063657e0 
+on database directory /home/fsp/IdeaProjects/AppIconTools/objectdb with class loader sun.misc.Launcher$AppClassLoader@27716f4 
+Loaded from file:/home/fsp/IdeaProjects/AppIconTools/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_91-b14
+user.dir=/home/fsp/IdeaProjects/AppIconTools
+os.name=Linux
+os.arch=amd64
+os.version=4.4.0-22-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
