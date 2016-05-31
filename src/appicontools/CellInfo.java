@@ -12,8 +12,10 @@ package appicontools;
 public class CellInfo {
     public String svgPath;
     public String iconName;
+    public int id;
     
-    public CellInfo(String svg, String nm){
+    public CellInfo(int id, String svg, String nm){
+        this.id = id;
         this.svgPath=svg;
         this.iconName=nm;
     }

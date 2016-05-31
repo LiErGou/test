@@ -30,7 +30,7 @@ public class DBHelper {
     PreparedStatement deletePre;
     PreparedStatement selectByClassNamePre;
     PreparedStatement selectByIDPre;
-    PreparedStatement selectByObjectNamePre;
+    PreparedStatement selectByObjectIdPre;
 
     Connection con;
 
@@ -128,7 +128,7 @@ public class DBHelper {
         deletePre = con.prepareStatement("delete from " + tableName + " where id=?");
         selectByClassNamePre = con.prepareStatement("select * from " + tableName + " WHERE className=?");
         selectByIDPre = con.prepareStatement("select * from " + tableName + " WHERE id=?");
-        selectByObjectNamePre = con.prepareStatement("select * from " + tableName + " WHERE objectId=?");
+        selectByObjectIdPre = con.prepareStatement("select * from " + tableName + " WHERE objectId=?");
 
         return true;
     }
@@ -157,8 +157,8 @@ public class DBHelper {
 
     public <T extends DBObjectBaseClass> List<T> selectByObjectId(int objectId, Class<T> clazz) throws SQLException {
         List<T> data = new LinkedList<>();
-        selectByObjectNamePre.setInt(1, objectId);
-        ResultSet rs = selectByObjectNamePre.executeQuery();
+        selectByObjectIdPre.setInt(1, objectId);
+        ResultSet rs = selectByObjectIdPre.executeQuery();
         while (rs.next()) {
             String c = rs.getString("content");
             T o = JSON.parseObject(c, clazz);

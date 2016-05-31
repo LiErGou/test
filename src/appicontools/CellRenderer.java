@@ -57,13 +57,14 @@ public class CellRenderer extends JLabel implements ListCellRenderer {
             boolean cellHasFocus) {
         String uri = "file:/fake.svg";
         CellInfo ci = (CellInfo) value;
+        String svgPath = ci.svgPath;
         if(isSelected){
-            ci.svgPath = ci.svgPath.replace(color,color2);
+            svgPath = svgPath.replace(color,color2);
         }
         setHorizontalAlignment(JLabel.CENTER);
         this.setBackground(bgColor);
         try {
-            SVGDocument document = df.createSVGDocument(uri, new StringReader(ci.svgPath));
+            SVGDocument document = df.createSVGDocument(uri, new StringReader(svgPath));
             BufferedImage bi = rnd.renderToImage(document, size, size);
             ImageUtils.drawBord(bi, Color.BLACK);
             Icon icon = new ImageIcon(bi);

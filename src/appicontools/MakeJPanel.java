@@ -28,10 +28,12 @@ public class MakeJPanel extends javax.swing.JPanel {
         this.iChange=iChange;
         this.ds = ds;
         this.objInfo = objInfo;
+
         initComponents();        
         cb_iconType.setSelectedItem(ds.iSize.iconType);
         iconPanel = new RePanel(ds);
         jPanel1.add(iconPanel, java.awt.BorderLayout.CENTER);
+        tb_iconName.setText(ds.iconName);
     }
 
     /**

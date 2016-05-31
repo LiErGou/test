@@ -87,9 +87,14 @@ public class MainJFrame extends javax.swing.JFrame {
         }
 
         Setting st = StaticTools.getSetting();
+        cb_object.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_objectActionPerformed(evt);
+            }
+        });
         cb_object.setSelectedItem(st.selectObject);
 
-        resetObjectList();
+
     }
 
     /**
@@ -231,9 +236,10 @@ public class MainJFrame extends javax.swing.JFrame {
 
         list_project.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         list_project.setToolTipText("项目图标");
-        list_project.setFixedCellHeight(120);
-        list_project.setFixedCellWidth(120);
+        list_project.setFixedCellHeight(100);
+        list_project.setFixedCellWidth(100);
         list_project.setVisibleRowCount(-1);
+        list_project.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane2.setViewportView(list_project);
 
         jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -422,8 +428,6 @@ public class MainJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int sind = list.getSelectedIndex();
         if (sind >= 0 && oSizes.size() > sind) {
-            JFrame jf = new JFrame();
-            jf.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             String selectObjectName = (String) this.cb_object.getSelectedItem();
             ObjectInfo obj = null;
 
@@ -435,23 +439,28 @@ public class MainJFrame extends javax.swing.JFrame {
             }
             if (obj != null) {
                 DrawSize ds = new DrawSize(obj.id, oSizes.get(sind), iSize, 1600);
-                MakeJPanel mjp = new MakeJPanel(ds, obj, new IconChange() {
-                    @Override
-                    public void changed() {
-                        resetObjectList();
-                    }
-                });
-                jf.setContentPane(mjp);
-                jf.setSize(750, 580);
-                jf.setTitle("生成图标");
-                jf.setVisible(true);
-
+                openMakeJPanel(ds, obj);
             }
         } else {
             lb_msg.setText("请选择图标");
         }
     }
 
+    void openMakeJPanel(DrawSize ds, ObjectInfo obj){
+
+        JFrame jf = new JFrame();
+        jf.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        MakeJPanel mjp = new MakeJPanel(ds, obj, new IconChange() {
+            @Override
+            public void changed() {
+                resetObjectList();
+            }
+        });
+        jf.setContentPane(mjp);
+        jf.setSize(750, 580);
+        jf.setTitle("生成图标");
+        jf.setVisible(true);
+    }
 
     private void tb_searchTextActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -602,31 +611,144 @@ public class MainJFrame extends javax.swing.JFrame {
     }
 
     private void bt_load_svg_fontActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-
         if (!loadSvgFont()) {
             lb_msg.setText("载入字体出错");
         }
     }
 
-    private void bt_createProjectActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    boolean checkNewObjectInfo(String nm, String p){
 
+        if(nm.isEmpty()){
+            lb_msg.setText("项目名称不能为空");
+            return false;
+        }
+        for(ObjectInfo oi : this.objectInfoList) {
+            if (oi.objectName.equals(nm)) {
+                lb_msg.setText("项目名称已存在");
+                return false;
+            }
+        }
+
+        if(!p.equals("object")) {
+            File f = new File(p);
+            if (!f.exists()) {
+                lb_msg.setText("项目路径不存在");
+                return false;
+            }
+        }
+        return true;
+    }
+    private void bt_createProjectActionPerformed(java.awt.event.ActionEvent evt) {
+        //检测是否合法
+        String nm = this.tb_objectName.getText().trim();
+        String p = this.tb_savePath.getText().trim();
+
+        if(checkNewObjectInfo(nm, p)) {
+            //保存更新DBHelper db = DBHelper.getDB();
+            DBHelper db = DBHelper.getDB();
+            if (db.getInitState()) {
+                try {
+                    db.insertContent(0, new ObjectInfo(nm, p));
+                    this.objectInfoList = db.selectByClassName(ObjectInfo.class);
+                    this.cb_object.addItem(nm);
+                    this.cb_object.setSelectedItem(nm);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+    private void cb_objectActionPerformed(java.awt.event.ActionEvent evt) {
+        resetObjectList();
     }
 
     private void bt_delProjectActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        ObjectInfo obj = getSelectObjectInfo();
+
+        if(obj!=null) {
+            try {
+                DBHelper db = DBHelper.getDB();
+                if (db.getInitState()) {
+                    List<DrawSize> dss = db.selectByObjectId(obj.id, DrawSize.class);
+                    for (DrawSize d : dss) {
+                        db.deleteContent(d.id);
+                    }
+                    db.deleteContent(obj.id);
+                    this.objectInfoList.remove(obj);
+                    this.cb_object.removeItem(obj.objectName);
+
+                    if(this.objectInfoList.size()>0) {
+                        this.cb_object.setSelectedItem(this.objectInfoList.get(this.objectInfoList.size()-1).objectName);
+                    }else {
+                        db.insertContent(0, new ObjectInfo("默认项目", "object"));
+                        this.objectInfoList=db.selectByClassName(ObjectInfo.class);
+                        this.cb_object.addItem("默认项目");
+                        this.cb_object.setSelectedItem(this.objectInfoList.get(this.objectInfoList.size()-1).objectName);
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     private void bt_editActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        int sind = this.list_project.getSelectedIndex();
+        if (sind >= 0) {
+            Object ic = this.list_project.getSelectedValue();
+            CellInfo ci = (CellInfo) ic;
+            DBHelper db = DBHelper.getDB();
+            try {
+                if (db.getInitState()) {
+                    List<DrawSize> dss = db.selectByID(ci.id, DrawSize.class);
+                    if(dss.size()>0){
+                        openMakeJPanel(dss.get(0), getSelectObjectInfo());
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            lb_msg.setText("请选择图标");
+        }
     }
 
     private void bt_saveObjectInfoActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+
+        String nm = this.tb_objectName.getText().trim();
+        String p = this.tb_savePath.getText().trim();
+
+        ObjectInfo obj = null;
+        if(checkNewObjectInfo(nm, p)) {
+            for (ObjectInfo oi : this.objectInfoList) {
+                if (oi.objectName.equals(nm)) {
+                    obj = oi;
+                    break;
+                }
+            }
+        }
+
+        if(obj!=null && (!obj.objectName.equals(nm) || !obj.savePath.equals(p))){
+            try {
+                DBHelper db = DBHelper.getDB();
+                if (db.getInitState()) {
+                    db.updateContent(obj.id, obj);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if(!obj.objectName.equals(nm)){
+                int si = cb_object.getSelectedIndex();
+                cb_object.removeItemAt(si);
+                cb_object.insertItemAt(nm, si);
+                cb_object.setSelectedIndex(si);
+            }
+        }
+
     }
 
-    private void resetObjectList() {
+    ObjectInfo getSelectObjectInfo(){
         String selectObjectName = (String) this.cb_object.getSelectedItem();
         ObjectInfo obj = null;
 
@@ -636,7 +758,16 @@ public class MainJFrame extends javax.swing.JFrame {
                 break;
             }
         }
+        return obj;
+    }
+
+    private void resetObjectList() {
+        ObjectInfo obj = getSelectObjectInfo();
         if (obj != null) {
+
+            tb_objectName.setText(obj.objectName);
+            tb_savePath.setText(obj.savePath);
+
             list_project.setBackground(StaticTools.Color2Contrary(StaticTools.String2Color(this.color)));
             DefaultListModel dlm = new DefaultListModel();
             try {
@@ -645,7 +776,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     List<DrawSize> dss = db.selectByObjectId(obj.id, DrawSize.class);
                     for (DrawSize d : dss) {
                         String svg = StaticTools.makeSvgXml(d);
-                        dlm.addElement(new CellInfo(svg, d.iconName));
+                        dlm.addElement(new CellInfo(d.id, svg, d.iconName));
                     }
                 }
             } catch (SQLException ex) {
@@ -665,7 +796,7 @@ public class MainJFrame extends javax.swing.JFrame {
                 DrawSize ds = new DrawSize(0, oSizes.get(i), iSize, 160);
                 String svg = StaticTools.makeSvgXml(ds);
 
-                dlm.addElement(new CellInfo(svg, String.valueOf(i)));
+                dlm.addElement(new CellInfo(0, svg, String.valueOf(i)));
             }
 
             //list1.setListData(paths.toArray());
