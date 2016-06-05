@@ -69,6 +69,12 @@ public class MainJFrame extends javax.swing.JFrame {
         color = "#000000";
         initComponents();
 
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
+
         cellRenderer = new CellRenderer(color, 50);
         list.setCellRenderer(cellRenderer);
         list_project.setCellRenderer(cellRenderer);
@@ -97,6 +103,15 @@ public class MainJFrame extends javax.swing.JFrame {
 
     }
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {
+        // TODO add your handling code here:
+        DBHelper db = DBHelper.getDB();
+        try {
+            db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
