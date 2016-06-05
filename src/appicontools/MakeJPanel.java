@@ -7,6 +7,7 @@ package appicontools;
 
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -267,7 +268,22 @@ public class MakeJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "图标名必须为以字母开头，由字母、数字、下划线组成", "出错", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
+        if(!ds.iconName.equals(iconName)){
+            DBHelper db = DBHelper.getDB();
+            try {
+                List<DrawSize> dss = db.selectByClassName(DrawSize.class);
+                for(DrawSize ds:dss){
+                    if(ds.iconName.equals(iconName)){
+                        JOptionPane.showMessageDialog(null, "图标名已存在", "出错", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MakeJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         ds.iconName=iconName;
         
         if (DrawIconHelper.createIcon(objInfo.savePath, ds)) {
