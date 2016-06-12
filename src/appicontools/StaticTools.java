@@ -103,13 +103,15 @@ public class StaticTools {
         return new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
     }
 
+    public static int CC(int c){
+        int cc = 255 - c;
+        if(cc>64 && cc<128)
+            cc-=64;
+        else if(cc>=128 && cc<192)
+            cc+=64;
+        return cc;
+    }
     public static Color Color2Contrary2(Color color) {
-        int r = color.getRed();
-        int g = color.getGreen();
-        int b = color.getBlue();
-        r = r > 127 ? r / 2 : (255 - r) / 2;
-        g = g > 127 ? g / 2 : (255 - g) / 2;
-        b = b > 127 ? b / 2 : (255 - b) / 2;
-        return new Color(r, g, b);
+        return new Color(CC(color.getRed()), CC(color.getGreen()), CC(color.getBlue()));
     }
 }
