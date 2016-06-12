@@ -68,6 +68,7 @@ public class StaticTools {
         return new DefaultComboBoxModel(new String[0]);
     }
 
+
     public static String makeSvgXml(DrawSize d) {
         /*原图宽高1024
         缩放比例=目标图完高/1024
@@ -79,7 +80,9 @@ public class StaticTools {
         sb.append("<svg width=\"").append(d.size).append("\" height=\"").append(d.size).append("\" viewBox=\"0 0 ").append(d.size).append(" ").append(d.size).append("\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
         sb.append("<g class=\"transform-group\">\n");
         sb.append("<g transform=\"translate(").append(d.x).append(", ").append(d.y).append(") scale(1, -1) scale(").append(d.scale).append(", ").append(d.scale).append(")\">");
-        sb.append(d.oSize.svgPath.replace("#737383", d.color));
+        //fill="#737383"
+        String svgPath = d.oSize.svgPath.replaceAll("fill=\"#[^\"]*\"", "fill=\""+d.color+"\"" );
+        sb.append(svgPath);
         sb.append("</g></g></svg>");
         return sb.toString();
     }

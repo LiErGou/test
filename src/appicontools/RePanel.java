@@ -63,7 +63,7 @@ public class RePanel extends JPanel {
     }
 
     public void setSize(int _s) {
-        dSize.MoceSize(_s);
+        dSize.MoveSize(_s);
         repaint();
     }
 
