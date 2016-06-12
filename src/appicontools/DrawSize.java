@@ -62,7 +62,7 @@ public class DrawSize  extends DBObjectBaseClass{
         this._yy=_yy;
         recalculate();
     }
-    public void MoceSize(int _ss){
+    public void MoveSize(int _ss){
         this._ss = _ss;
         recalculate();
     }
@@ -99,8 +99,8 @@ public class DrawSize  extends DBObjectBaseClass{
         ds._yy=(int)(_yy*dpiScale);
         ds.objectId=objectId;
         ds.iconName=iconName;        
-        ds.color="#000000";
-        ds.bgcolor="#FFFFFF";
+        ds.color=color;
+        ds.bgcolor=bgcolor;
     
         return ds;
     }
@@ -122,9 +122,13 @@ public class DrawSize  extends DBObjectBaseClass{
             x = iSize.getBordWidth();
         }
         size = iSize.outerSize;
-        
+
+        //上面为原始数据
+
         double dpiScale = (double)dpi/160;
-        scale*=dpiScale;
+
+        scale = ((double) iSize.insideSize*dpiScale+_ss) / (oSize.w);
+
         size=(int)(size*dpiScale);
         x=(int)(x*dpiScale)+_xx-_ss/2;
         y=(int)(y*dpiScale)+_yy+_ss/2;
