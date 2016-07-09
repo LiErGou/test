@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Sun Jun 12 17:33:57 CST 2016:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0155-43f5-e909-0000044896f8 
-on database directory D:\IdeaProjects\appicontools\objectdb with class loader sun.misc.Launcher$AppClassLoader@2ff4acd0 
-Loaded from file:/D:/IdeaProjects/appicontools/lib/derby.jar
+Sat Jul 09 23:43:27 CST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0155-d053-e7fd-000006370230 
+on database directory /home/fsp/IdeaProjects/AppIconTools/AppIconToolsDB with class loader sun.misc.Launcher$AppClassLoader@27716f4 
+Loaded from file:/home/fsp/IdeaProjects/AppIconTools/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_91-b14
-user.dir=D:\IdeaProjects\appicontools
-os.name=Windows 7
+java.runtime.version=1.8.0_92-b14
+user.dir=/home/fsp/IdeaProjects/AppIconTools
+os.name=Linux
 os.arch=amd64
-os.version=6.1
+os.version=4.4.0-28-generic
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

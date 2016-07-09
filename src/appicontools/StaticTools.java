@@ -48,7 +48,7 @@ public class StaticTools {
         } catch (SQLException ex) {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-         return null;
+        return null;
     }
     
     public static DefaultComboBoxModel getIconTypes() {

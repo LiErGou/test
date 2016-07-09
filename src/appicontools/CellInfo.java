@@ -5,6 +5,8 @@
  */
 package appicontools;
 
+import java.awt.*;
+
 /**
  *
  * @author fsp
@@ -13,10 +15,14 @@ public class CellInfo {
     public String svgPath;
     public String iconName;
     public int id;
+
+    //public Color color=Color.BLACK;
+    public Color bgColor=Color.WHITE;
     
-    public CellInfo(int id, String svg, String nm){
+    public CellInfo(int id, String svg, String nm, Color bgColor){
         this.id = id;
         this.svgPath=svg;
         this.iconName=nm;
+        this.bgColor = bgColor;
     }
 }

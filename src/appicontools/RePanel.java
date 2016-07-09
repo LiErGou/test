@@ -68,7 +68,7 @@ public class RePanel extends JPanel {
     }
 
     Color getColor2() {
-        Color c2 = StaticTools.String2Color(dSize.color);
+        Color c2 = StaticTools.String2Color(dSize.bgcolor);
         return StaticTools.Color2Contrary2(c2);
     }
 
@@ -80,7 +80,8 @@ public class RePanel extends JPanel {
         g.setColor(getBGColor());
         g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(bi, (int)(dSize.iSize.getOuterSpeaceWidth() * scale), (int)(dSize.iSize.getOuterSpeaceWidth() * scale), null);
-        g.setColor(getColor2());
+        Color color = getColor2();
+        g.setColor(color);
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         g.drawRect(
                (int)(dSize.iSize.getOuterSpeaceWidth() * scale),

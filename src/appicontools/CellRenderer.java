@@ -26,23 +26,11 @@ public class CellRenderer extends JLabel implements ListCellRenderer {
     OffScreenSVGRenderer rnd = new OffScreenSVGRenderer();
     SAXSVGDocumentFactory df = new SAXSVGDocumentFactory("org.apache.xerces.parsers.SAXParser");
 
-    private String color;
-    private Color bgColor;
-    private String color2;
     private int size;
-    
-    public void setColor(String c){
-        color=c;
-        Color c2 = StaticTools.String2Color(color);
-        bgColor=StaticTools.Color2Contrary(c2);
-        Color c3 = StaticTools.Color2Contrary2(c2);
-        color2=StaticTools.Color2String(c3);
-    }
-    
+
     /**/
-    CellRenderer(String c, int s) {
+    CellRenderer(int s) {
         setOpaque(true);
-        setColor(c);
         setVerticalTextPosition(JLabel.BOTTOM);
         setHorizontalTextPosition(JLabel.CENTER);
         size=s;
@@ -58,15 +46,13 @@ public class CellRenderer extends JLabel implements ListCellRenderer {
         String uri = "file:/fake.svg";
         CellInfo ci = (CellInfo) value;
         String svgPath = ci.svgPath;
-        if(isSelected){
-            svgPath = svgPath.replace(color,color2);
-        }
+
         setHorizontalAlignment(JLabel.CENTER);
-        this.setBackground(bgColor);
+        this.setBackground(Color.WHITE);
         try {
             SVGDocument document = df.createSVGDocument(uri, new StringReader(svgPath));
             BufferedImage bi = rnd.renderToImage(document, size, size);
-            ImageUtils.drawBord(bi, Color.BLACK);
+            bi = ImageUtils.drawBackground(bi, ci.bgColor, isSelected?Color.RED:Color.BLACK);
             Icon icon = new ImageIcon(bi);
             this.setIcon(icon);
             this.setText(ci.iconName);

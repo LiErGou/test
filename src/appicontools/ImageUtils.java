@@ -132,7 +132,18 @@ public class ImageUtils {
         g.drawRect(0, 0, src.getWidth()-1, src.getHeight()-1);
         return  src;
     }
-    
+
+
+    public static BufferedImage drawBackground(BufferedImage src, Color c, Color bordColor) {
+        BufferedImage bi = new BufferedImage(src.getWidth(), src.getHeight(), src.getType());
+        Graphics2D g = bi.createGraphics();
+        g.setColor(c);
+        g.fillRect(0,0,bi.getWidth(),bi.getHeight());
+        g.setColor(bordColor);
+        g.drawRect(0, 0, src.getWidth()-1, src.getHeight()-1);
+        g.drawImage(src,0,0,null);
+        return  bi;
+    }
     /**
      * 图像切割(按指定起点坐标和宽高切割)
      *

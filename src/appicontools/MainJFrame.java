@@ -5,7 +5,7 @@
  */
 package appicontools;
 
-import java.awt.Dialog;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -44,7 +43,6 @@ public class MainJFrame extends javax.swing.JFrame {
     private Pattern pp;
 
     private List<OriginalIconSize> oSizes;
-    private String color;
     private CellRenderer cellRenderer;
 
     private String searchText = "";
@@ -66,7 +64,6 @@ public class MainJFrame extends javax.swing.JFrame {
 
         p = Pattern.compile("<path .*?</path>");
         pp = Pattern.compile("<h3>共为你找到<em>(\\d*)</em>个结果</h3>");
-        color = "#000000";
         initComponents();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -75,9 +72,24 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
-        cellRenderer = new CellRenderer(color, 50);
+        cellRenderer = new CellRenderer(50);
         list.setCellRenderer(cellRenderer);
         list_project.setCellRenderer(cellRenderer);
+
+        list.setBackground(Color.WHITE);
+        list_project.setBackground(Color.WHITE);
+
+        cb_object.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_objectActionPerformed(evt);
+            }
+        });
+
+        initObject();
+    }
+
+
+    private void initObject(){
 
         try {
             DBHelper db = DBHelper.getDB();
@@ -92,15 +104,22 @@ public class MainJFrame extends javax.swing.JFrame {
             Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Setting st = StaticTools.getSetting();
-        cb_object.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cb_objectActionPerformed(evt);
+        if(objectInfoList.size()==0){
+            CreateIconObjedt cioDlg = new CreateIconObjedt();
+            cioDlg.setSize(500,200);
+            cioDlg.setModal(true);
+            cioDlg.setVisible(true);
+            if(cioDlg.successCreated){
+                initObject();
+            } else {
+                dispose();
             }
-        });
-        cb_object.setSelectedItem(st.selectObject);
+        } else {
+            Setting st = StaticTools.getSetting();
+            cb_object.setSelectedItem(st.selectObject);
 
-
+            resetObjectList();
+        }
     }
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {
@@ -111,6 +130,7 @@ public class MainJFrame extends javax.swing.JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.exit(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -141,16 +161,12 @@ public class MainJFrame extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         cb_object = new javax.swing.JComboBox<>();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        tb_objectName = new javax.swing.JTextField();
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        tb_savePath = new javax.swing.JTextField();
+        tb_savePath = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         bt_createProject = new javax.swing.JButton();
         bt_delProject = new javax.swing.JButton();
-        bt_saveObjectInfo = new javax.swing.JButton();
         bt_edit = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -259,7 +275,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jPanel2.setLayout(new java.awt.GridLayout(4, 1));
+        jPanel2.setLayout(new java.awt.GridLayout(3, 1));
 
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
@@ -271,17 +287,6 @@ public class MainJFrame extends javax.swing.JFrame {
         jPanel4.add(cb_object);
 
         jPanel2.add(jPanel4);
-
-        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        jLabel4.setText("名称");
-        jPanel5.add(jLabel4);
-
-        tb_objectName.setText("jTextField1");
-        tb_objectName.setPreferredSize(new java.awt.Dimension(136, 27));
-        jPanel5.add(tb_objectName);
-
-        jPanel2.add(jPanel5);
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
@@ -315,17 +320,6 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
         jPanel7.add(bt_delProject);
-
-        bt_saveObjectInfo.setText("保存");
-        bt_saveObjectInfo.setFocusable(false);
-        bt_saveObjectInfo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        bt_saveObjectInfo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        bt_saveObjectInfo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bt_saveObjectInfoActionPerformed(evt);
-            }
-        });
-        jPanel7.add(bt_saveObjectInfo);
 
         bt_edit.setText("编辑");
         bt_edit.setFocusable(false);
@@ -423,6 +417,7 @@ public class MainJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "请输入搜索内容", "关键词为空", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     private void bt_loadActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -654,23 +649,12 @@ public class MainJFrame extends javax.swing.JFrame {
         return true;
     }
     private void bt_createProjectActionPerformed(java.awt.event.ActionEvent evt) {
-        //检测是否合法
-        String nm = this.tb_objectName.getText().trim();
-        String p = this.tb_savePath.getText().trim();
-
-        if(checkNewObjectInfo(nm, p)) {
-            //保存更新DBHelper db = DBHelper.getDB();
-            DBHelper db = DBHelper.getDB();
-            if (db.getInitState()) {
-                try {
-                    db.insertContent(0, new ObjectInfo(nm, p));
-                    this.objectInfoList = db.selectByClassName(ObjectInfo.class);
-                    this.cb_object.addItem(nm);
-                    this.cb_object.setSelectedItem(nm);
-                } catch (SQLException ex) {
-                    Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        CreateIconObjedt cioDlg = new CreateIconObjedt();
+        cioDlg.setSize(500,500);
+        cioDlg.setModal(true);
+        cioDlg.setVisible(true);
+        if(cioDlg.successCreated){
+            initObject();
         }
     }
     private void cb_objectActionPerformed(java.awt.event.ActionEvent evt) {
@@ -695,10 +679,15 @@ public class MainJFrame extends javax.swing.JFrame {
                     if(this.objectInfoList.size()>0) {
                         this.cb_object.setSelectedItem(this.objectInfoList.get(this.objectInfoList.size()-1).objectName);
                     }else {
-                        db.insertContent(0, new ObjectInfo("默认项目", "object"));
-                        this.objectInfoList=db.selectByClassName(ObjectInfo.class);
-                        this.cb_object.addItem("默认项目");
-                        this.cb_object.setSelectedItem(this.objectInfoList.get(this.objectInfoList.size()-1).objectName);
+                        CreateIconObjedt cioDlg = new CreateIconObjedt();
+                        cioDlg.setSize(500,200);
+                        cioDlg.setModal(true);
+                        cioDlg.setVisible(true);
+                        if(cioDlg.successCreated){
+                            initObject();
+                        } else {
+                            dispose();
+                        }
                     }
                 }
             } catch (SQLException ex) {
@@ -728,40 +717,6 @@ public class MainJFrame extends javax.swing.JFrame {
         }
     }
 
-    private void bt_saveObjectInfoActionPerformed(java.awt.event.ActionEvent evt) {
-
-        String nm = this.tb_objectName.getText().trim();
-        String p = this.tb_savePath.getText().trim();
-
-        ObjectInfo obj = null;
-        if(checkNewObjectInfo(nm, p)) {
-            for (ObjectInfo oi : this.objectInfoList) {
-                if (oi.objectName.equals(nm)) {
-                    obj = oi;
-                    break;
-                }
-            }
-        }
-
-        if(obj!=null && (!obj.objectName.equals(nm) || !obj.savePath.equals(p))){
-            try {
-                DBHelper db = DBHelper.getDB();
-                if (db.getInitState()) {
-                    db.updateContent(obj.id, obj);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            if(!obj.objectName.equals(nm)){
-                int si = cb_object.getSelectedIndex();
-                cb_object.removeItemAt(si);
-                cb_object.insertItemAt(nm, si);
-                cb_object.setSelectedIndex(si);
-            }
-        }
-
-    }
 
     ObjectInfo getSelectObjectInfo(){
         String selectObjectName = (String) this.cb_object.getSelectedItem();
@@ -780,10 +735,8 @@ public class MainJFrame extends javax.swing.JFrame {
         ObjectInfo obj = getSelectObjectInfo();
         if (obj != null) {
 
-            tb_objectName.setText(obj.objectName);
             tb_savePath.setText(obj.savePath);
 
-            list_project.setBackground(StaticTools.Color2Contrary(StaticTools.String2Color(this.color)));
             DefaultListModel dlm = new DefaultListModel();
             try {
                 DBHelper db = DBHelper.getDB();
@@ -791,7 +744,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     List<DrawSize> dss = db.selectByObjectId(obj.id, DrawSize.class);
                     for (DrawSize d : dss) {
                         String svg = StaticTools.makeSvgXml(d);
-                        dlm.addElement(new CellInfo(d.id, svg, d.iconName));
+                        dlm.addElement(new CellInfo(d.id, svg, d.iconName,  StaticTools.String2Color(d.bgcolor)));
                     }
                 }
             } catch (SQLException ex) {
@@ -803,15 +756,13 @@ public class MainJFrame extends javax.swing.JFrame {
 
     private void resetList() {
         if (oSizes.size() > 0) {
-            list.setBackground(StaticTools.Color2Contrary(StaticTools.String2Color(this.color)));
-            cellRenderer.setColor(this.color);
             DefaultListModel dlm = new DefaultListModel();
 
             for (int i = 0; i < oSizes.size(); i++) {
                 DrawSize ds = new DrawSize(0, oSizes.get(i), iSize, 160);
                 String svg = StaticTools.makeSvgXml(ds);
 
-                dlm.addElement(new CellInfo(0, svg, String.valueOf(i)));
+                dlm.addElement(new CellInfo(0, svg, String.valueOf(i), Color.WHITE));
             }
 
             //list1.setListData(paths.toArray());
@@ -867,20 +818,17 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton bt_edit;
     private javax.swing.JButton bt_load;
     private javax.swing.JButton bt_load_svg_font;
-    private javax.swing.JButton bt_saveObjectInfo;
     private javax.swing.JComboBox<String> cb_object;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
@@ -894,8 +842,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JList<String> list;
     private javax.swing.JList<String> list_project;
     private javax.swing.JPanel panel;
-    private javax.swing.JTextField tb_objectName;
-    private javax.swing.JTextField tb_savePath;
+    private javax.swing.JLabel tb_savePath;
     private javax.swing.JTextField tb_searchText;
     // End of variables declaration
 }

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class DBHelper {
 
-    final String databaseName = "objectdb";
+    final String databaseName = "AppIconToolsDB";
     final String tableName = "TB";
 
     PreparedStatement insertPre;
@@ -110,10 +110,10 @@ public class DBHelper {
             insertContent(0, new IconSize("状态栏", 24, 24, 18));
             insertContent(0, new IconSize("小图标", 16, 16, 12));
             
-            insertContent(0, new ObjectInfo("默认项目","object"));
-            
+/*            insertContent(0, new ObjectInfo("默认项目","object"));
+            */
             Setting st = new Setting();
-            st.selectObject="默认项目";
+            st.selectObject="";
             insertContent(0, st);
             
             con.commit();
