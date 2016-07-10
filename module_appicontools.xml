@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_appicontools" default="compile.module.appicontools">
+  <dirname property="module.appicontools.basedir" file="${ant.file.module_appicontools}"/>
+  
+  <property name="module.jdk.home.appicontools" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.appicontools" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.appicontools" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.appicontools" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="appicontools.output.dir" value="${module.appicontools.basedir}/out/production/AppIconTools"/>
+  <property name="appicontools.testoutput.dir" value="${module.appicontools.basedir}/out/test/AppIconTools"/>
+  
+  <path id="appicontools.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="appicontools.module.production.classpath">
+    <path refid="${module.jdk.classpath.appicontools}"/>
+    <pathelement location="${basedir}/lib/batik-anim-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-awt-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-bridge-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-codec-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-css-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-ext-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-extension-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gui-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gvt-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-parser-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-script-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svg-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svggen-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-swing-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-transcoder-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-xml-1.8.jar"/>
+    <pathelement location="${basedir}/lib/derby.jar"/>
+    <pathelement location="${basedir}/lib/derbyclient.jar"/>
+    <pathelement location="${basedir}/lib/fastjson-1.2.9.jar"/>
+    <pathelement location="${basedir}/lib/fop-transcoder-allinone-1.1.jar"/>
+    <pathelement location="${basedir}/lib/js.jar"/>
+    <pathelement location="${basedir}/lib/okhttp-3.2.0.jar"/>
+    <pathelement location="${basedir}/lib/okio-1.8.0.jar"/>
+    <pathelement location="${basedir}/lib/xalan-2.7.0.jar"/>
+    <pathelement location="${basedir}/lib/xerces_2_5_0.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-ext-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xmlgraphics-commons-2.0.jar"/>
+  </path>
+  
+  <path id="appicontools.runtime.production.module.classpath">
+    <pathelement location="${appicontools.output.dir}"/>
+    <pathelement location="${basedir}/lib/batik-anim-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-awt-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-bridge-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-codec-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-css-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-ext-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-extension-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gui-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gvt-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-parser-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-script-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svg-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svggen-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-swing-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-transcoder-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-xml-1.8.jar"/>
+    <pathelement location="${basedir}/lib/derby.jar"/>
+    <pathelement location="${basedir}/lib/derbyclient.jar"/>
+    <pathelement location="${basedir}/lib/fastjson-1.2.9.jar"/>
+    <pathelement location="${basedir}/lib/fop-transcoder-allinone-1.1.jar"/>
+    <pathelement location="${basedir}/lib/js.jar"/>
+    <pathelement location="${basedir}/lib/okhttp-3.2.0.jar"/>
+    <pathelement location="${basedir}/lib/okio-1.8.0.jar"/>
+    <pathelement location="${basedir}/lib/xalan-2.7.0.jar"/>
+    <pathelement location="${basedir}/lib/xerces_2_5_0.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-ext-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xmlgraphics-commons-2.0.jar"/>
+  </path>
+  
+  <path id="appicontools.module.classpath">
+    <path refid="${module.jdk.classpath.appicontools}"/>
+    <pathelement location="${appicontools.output.dir}"/>
+    <pathelement location="${basedir}/lib/batik-anim-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-awt-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-bridge-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-codec-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-css-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-ext-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-extension-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gui-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gvt-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-parser-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-script-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svg-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svggen-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-swing-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-transcoder-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-xml-1.8.jar"/>
+    <pathelement location="${basedir}/lib/derby.jar"/>
+    <pathelement location="${basedir}/lib/derbyclient.jar"/>
+    <pathelement location="${basedir}/lib/fastjson-1.2.9.jar"/>
+    <pathelement location="${basedir}/lib/fop-transcoder-allinone-1.1.jar"/>
+    <pathelement location="${basedir}/lib/js.jar"/>
+    <pathelement location="${basedir}/lib/okhttp-3.2.0.jar"/>
+    <pathelement location="${basedir}/lib/okio-1.8.0.jar"/>
+    <pathelement location="${basedir}/lib/xalan-2.7.0.jar"/>
+    <pathelement location="${basedir}/lib/xerces_2_5_0.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-ext-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xmlgraphics-commons-2.0.jar"/>
+  </path>
+  
+  <path id="appicontools.runtime.module.classpath">
+    <pathelement location="${appicontools.testoutput.dir}"/>
+    <pathelement location="${appicontools.output.dir}"/>
+    <pathelement location="${basedir}/lib/batik-anim-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-awt-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-bridge-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-codec-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-css-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-ext-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-extension-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gui-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-gvt-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-parser-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-script-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svg-dom-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-svggen-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-swing-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-transcoder-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-util-1.8.jar"/>
+    <pathelement location="${basedir}/lib/batik-xml-1.8.jar"/>
+    <pathelement location="${basedir}/lib/derby.jar"/>
+    <pathelement location="${basedir}/lib/derbyclient.jar"/>
+    <pathelement location="${basedir}/lib/fastjson-1.2.9.jar"/>
+    <pathelement location="${basedir}/lib/fop-transcoder-allinone-1.1.jar"/>
+    <pathelement location="${basedir}/lib/js.jar"/>
+    <pathelement location="${basedir}/lib/okhttp-3.2.0.jar"/>
+    <pathelement location="${basedir}/lib/okio-1.8.0.jar"/>
+    <pathelement location="${basedir}/lib/xalan-2.7.0.jar"/>
+    <pathelement location="${basedir}/lib/xerces_2_5_0.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xml-apis-ext-1.3.04.jar"/>
+    <pathelement location="${basedir}/lib/xmlgraphics-commons-2.0.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.appicontools">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.appicontools">
+    <patternset refid="excluded.from.module.appicontools"/>
+  </patternset>
+  
+  <path id="appicontools.module.sourcepath">
+    <dirset dir="${module.appicontools.basedir}">
+      <include name="src"/>
+      <include name="res"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.appicontools" depends="compile.module.appicontools.production,compile.module.appicontools.tests" description="Compile module AppIconTools"/>
+  
+  <target name="compile.module.appicontools.production" depends="register.custom.compilers" description="Compile module AppIconTools; production classes">
+    <mkdir dir="${appicontools.output.dir}"/>
+    <javac2 destdir="${appicontools.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.appicontools}/javac">
+      <compilerarg line="${compiler.args.appicontools}"/>
+      <bootclasspath refid="appicontools.module.bootclasspath"/>
+      <classpath refid="appicontools.module.production.classpath"/>
+      <src refid="appicontools.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.appicontools"/>
+    </javac2>
+    
+    <copy todir="${appicontools.output.dir}">
+      <fileset dir="${module.appicontools.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.appicontools.basedir}/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.appicontools.tests" depends="register.custom.compilers,compile.module.appicontools.production" description="compile module AppIconTools; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.appicontools" description="cleanup module">
+    <delete dir="${appicontools.output.dir}"/>
+    <delete dir="${appicontools.testoutput.dir}"/>
+  </target>
+</project>
