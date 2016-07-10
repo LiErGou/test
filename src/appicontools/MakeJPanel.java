@@ -272,7 +272,7 @@ public class MakeJPanel extends javax.swing.JPanel {
         if(!ds.iconName.equals(iconName)){
             DBHelper db = DBHelper.getDB();
             try {
-                List<DrawSize> dss = db.selectByClassName(DrawSize.class);
+                List<DrawSize> dss = db.selectByObjectId(objInfo.id, DrawSize.class);
                 for(DrawSize ds:dss){
                     if(ds.iconName.equals(iconName)){
                         JOptionPane.showMessageDialog(null, "图标名已存在", "出错", JOptionPane.ERROR_MESSAGE);

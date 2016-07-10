@@ -6,8 +6,11 @@
 package appicontools;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,10 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -61,6 +62,13 @@ public class MainJFrame extends javax.swing.JFrame {
     public MainJFrame() {
 
         this.oSizes = new LinkedList<>();
+
+        try {
+            Image icon = ImageIO.read(this.getClass().getResource("/ic_icon.png"));
+            this.setIconImage(icon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         p = Pattern.compile("<path .*?</path>");
         pp = Pattern.compile("<h3>共为你找到<em>(\\d*)</em>个结果</h3>");
@@ -105,11 +113,7 @@ public class MainJFrame extends javax.swing.JFrame {
         }
 
         if(objectInfoList.size()==0){
-            CreateIconObjedt cioDlg = new CreateIconObjedt();
-            cioDlg.setSize(500,200);
-            cioDlg.setModal(true);
-            cioDlg.setVisible(true);
-            if(cioDlg.successCreated){
+            if(createObject()){
                 initObject();
             } else {
                 dispose();
@@ -120,6 +124,15 @@ public class MainJFrame extends javax.swing.JFrame {
 
             resetObjectList();
         }
+    }
+
+    boolean createObject(){
+        CreateIconObjedt cioDlg = new CreateIconObjedt();
+        cioDlg.setTitle("创建项目");
+        cioDlg.setSize(500,200);
+        cioDlg.setModal(true);
+        cioDlg.setVisible(true);
+        return cioDlg.successCreated;
     }
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {
@@ -141,7 +154,6 @@ public class MainJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
-        jSeparator3 = new javax.swing.JSeparator();
         jToolBar1 = new javax.swing.JToolBar();
         tb_searchText = new javax.swing.JTextField();
         bt_load = new javax.swing.JButton();
@@ -165,8 +177,10 @@ public class MainJFrame extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         tb_savePath = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         bt_createProject = new javax.swing.JButton();
         bt_delProject = new javax.swing.JButton();
+        bt_delIcon = new javax.swing.JButton();
         bt_edit = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -275,7 +289,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jPanel2.setLayout(new java.awt.GridLayout(3, 1));
+        jPanel2.setLayout(new java.awt.GridLayout(4, 1));
 
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
@@ -299,7 +313,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         jPanel2.add(jPanel6);
 
-        bt_createProject.setText("新建");
+        bt_createProject.setText("新建项目");
         bt_createProject.setFocusable(false);
         bt_createProject.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bt_createProject.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -310,7 +324,7 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jPanel7.add(bt_createProject);
 
-        bt_delProject.setText("删除");
+        bt_delProject.setText("删除项目");
         bt_delProject.setFocusable(false);
         bt_delProject.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bt_delProject.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -321,7 +335,20 @@ public class MainJFrame extends javax.swing.JFrame {
         });
         jPanel7.add(bt_delProject);
 
-        bt_edit.setText("编辑");
+        jPanel2.add(jPanel7);
+
+        bt_delIcon.setText("删除图标");
+        bt_delIcon.setFocusable(false);
+        bt_delIcon.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bt_delIcon.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bt_delIcon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_delIconActionPerformed(evt);
+            }
+        });
+        jPanel5.add(bt_delIcon);
+
+        bt_edit.setText("编辑图标");
         bt_edit.setFocusable(false);
         bt_edit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bt_edit.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -330,9 +357,11 @@ public class MainJFrame extends javax.swing.JFrame {
                 bt_editActionPerformed(evt);
             }
         });
-        jPanel7.add(bt_edit);
+        jPanel5.add(bt_edit);
 
-        jPanel2.add(jPanel7);
+        jPanel2.add(jPanel5);
+
+
 
         jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_START);
 
@@ -649,16 +678,31 @@ public class MainJFrame extends javax.swing.JFrame {
         return true;
     }
     private void bt_createProjectActionPerformed(java.awt.event.ActionEvent evt) {
-        CreateIconObjedt cioDlg = new CreateIconObjedt();
-        cioDlg.setSize(500,500);
-        cioDlg.setModal(true);
-        cioDlg.setVisible(true);
-        if(cioDlg.successCreated){
+        if(createObject()){
             initObject();
         }
     }
     private void cb_objectActionPerformed(java.awt.event.ActionEvent evt) {
         resetObjectList();
+    }
+
+    private void bt_delIconActionPerformed(java.awt.event.ActionEvent evt) {
+        int sind = this.list_project.getSelectedIndex();
+        if (sind >= 0) {
+            Object ic = this.list_project.getSelectedValue();
+            CellInfo ci = (CellInfo) ic;
+            DBHelper db = DBHelper.getDB();
+            try {
+                if (db.getInitState()) {
+                    db.deleteContent(ci.id);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            resetObjectList();
+        } else {
+            lb_msg.setText("请选择图标");
+        }
     }
 
     private void bt_delProjectActionPerformed(java.awt.event.ActionEvent evt) {
@@ -679,11 +723,7 @@ public class MainJFrame extends javax.swing.JFrame {
                     if(this.objectInfoList.size()>0) {
                         this.cb_object.setSelectedItem(this.objectInfoList.get(this.objectInfoList.size()-1).objectName);
                     }else {
-                        CreateIconObjedt cioDlg = new CreateIconObjedt();
-                        cioDlg.setSize(500,200);
-                        cioDlg.setModal(true);
-                        cioDlg.setVisible(true);
-                        if(cioDlg.successCreated){
+                        if(createObject()){
                             initObject();
                         } else {
                             dispose();
@@ -815,6 +855,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton bt_creat;
     private javax.swing.JButton bt_createProject;
     private javax.swing.JButton bt_delProject;
+    private javax.swing.JButton bt_delIcon;
     private javax.swing.JButton bt_edit;
     private javax.swing.JButton bt_load;
     private javax.swing.JButton bt_load_svg_font;
@@ -829,12 +870,12 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
-    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lb_msg;
